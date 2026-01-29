@@ -31,8 +31,8 @@ public class ClientUpdateTest {
 
         responseUser.assertThat()
                 .statusCode(SC_OK)
-                .extract()
-                .path("success");
+                .and()
+                .body("success", is(true));
     }
 
     @AfterEach

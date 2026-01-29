@@ -50,6 +50,7 @@ public class CreateOrderNotAuthorizedTest {
         orderClient.createOrderUnauthorized(ingredientsRequest)
                 .assertThat()
                 .statusCode(SC_OK)
+                .and()
                 .body("success", is(true));
     }
 }

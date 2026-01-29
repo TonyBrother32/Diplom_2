@@ -27,8 +27,9 @@ public class ClientLoginTest {
 
         responseUser.assertThat()
                 .statusCode(SC_OK)
-                .extract()
-                .path("success", String.valueOf(is(true)));
+                .and()
+                .body("success", is(true));
+
     }
 
     @AfterEach
@@ -52,8 +53,8 @@ public class ClientLoginTest {
 
         response.assertThat()
                 .statusCode(SC_OK)
-                .extract()
-                .path("success", String.valueOf(is(true)));
+                .and()
+                .body("success", is(true));
     }
 
     @Test
@@ -66,8 +67,8 @@ public class ClientLoginTest {
                 .statusCode(SC_UNAUTHORIZED)
                 .and()
                 .body("message", equalTo("email or password are incorrect"))
-                .extract()
-                .path("success", String.valueOf(is(false)));
+                .and()
+                .body("success", is(false));
     }
 
     @Test
@@ -80,7 +81,7 @@ public class ClientLoginTest {
                 .statusCode(SC_UNAUTHORIZED)
                 .and()
                 .body("message", equalTo("email or password are incorrect"))
-                .extract()
-                .path("success", String.valueOf(is(false)));
+                .and()
+                .body("success", is(false));
     }
 }

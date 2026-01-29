@@ -46,7 +46,7 @@ public class ClientRegistrationTest {
 
         responseUser.assertThat()
                 .statusCode(SC_OK)
-                .extract()
-                .path("accessToken");
+                .and()
+                .body("success", is(true));
     }
 }

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class GetClientOrderAuthorizedTest {
 
@@ -41,8 +42,9 @@ public class GetClientOrderAuthorizedTest {
 
         responseUser.assertThat()
                 .statusCode(SC_OK)
-                .extract()
-                .path("accessToken");
+                .and()
+                .body("success", is(true));
+
 
         // Получение списка ингредиентов
         Response ingredients = ingredientsClient.getIngredients();
@@ -66,16 +68,20 @@ public class GetClientOrderAuthorizedTest {
         ValidatableResponse createOrderResponse = orderClient.createOrderAuthorized(ingredientsRequest, token);
         createOrderResponse.assertThat()
                 .statusCode(SC_OK)
+                .and()
                 .body("success", is(true));
     }
 
     @AfterEach
     public void clear() {
         if (token != null) {
+            System.out.println("Удаляем пользователя: " + token);
             ValidatableResponse deleteResponse = client.deleteClient(token);
             deleteResponse.assertThat()
                     .statusCode(SC_ACCEPTED)
+                    .and()
                     .body("success", is(true))
+                    .and()
                     .body("message", is("User successfully removed"));
         }
     }
@@ -85,6 +91,9 @@ public class GetClientOrderAuthorizedTest {
     public void getUserOrderWithAuthorization() {
         orderClient.getOrderAuthorized(token).assertThat()
                 .statusCode(SC_OK)
-                .body("success", is(true));
+                .and()
+                .body("success", is(true))
+                .and()
+                .body("orders", is(notNullValue()));
     }
 }

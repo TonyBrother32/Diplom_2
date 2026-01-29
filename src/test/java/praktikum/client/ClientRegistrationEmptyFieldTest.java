@@ -31,10 +31,8 @@ public class ClientRegistrationEmptyFieldTest {
             client.deleteClient(token)
                     .assertThat()
                     .statusCode(SC_ACCEPTED)
-                    .log().all()
                     .and()
                     .body("success", is(true))
-                    .log().all()
                     .and()
                     .body("message", is("User successfully removed"));
         }

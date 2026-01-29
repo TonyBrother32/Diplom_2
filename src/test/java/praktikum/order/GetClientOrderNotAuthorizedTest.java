@@ -25,7 +25,7 @@ public class GetClientOrderNotAuthorizedTest {
                 .statusCode(SC_UNAUTHORIZED)
                 .body("success", is(false))
                 .and()
-                .body("message", equalTo("You should be authorised"));
+                .body("message", is("You should be authorised"));
     }
 }
 

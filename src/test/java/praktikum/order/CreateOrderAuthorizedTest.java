@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class CreateOrderAuthorizedTest {
 
@@ -38,21 +39,25 @@ public class CreateOrderAuthorizedTest {
         clientGenerator = ClientGenerator.getRandom();
         ValidatableResponse responseUser = client.createClient(clientGenerator);
         token = responseUser.extract().path("accessToken");
+
         responseUser.assertThat()
                 .statusCode(SC_OK)
-                .extract()
-                .path("success");
+                .and()
+                .body("success", is(true));
     }
 
     @AfterEach
     public void clear() {
-        client.deleteClient(token)
-                .assertThat()
-                .statusCode(SC_ACCEPTED)
-                .and()
-                .body("success", is(true))
-                .and()
-                .body("message", is("User successfully removed"));
+        if (token != null) {
+            System.out.println("Удаляем пользователя: " + token);
+            client.deleteClient(token)
+                    .assertThat()
+                    .statusCode(SC_ACCEPTED)
+                    .and()
+                    .body("success", is(true))
+                    .and()
+                    .body("message", is("User successfully removed"));
+        }
     }
 
     @Test
@@ -68,7 +73,11 @@ public class CreateOrderAuthorizedTest {
         ingredientsRequest = new IngredientsRequest(ingredientsList);
         orderClient.createOrderAuthorized(ingredientsRequest, token)
                 .assertThat()
-                .statusCode(SC_OK);
+                .statusCode(SC_OK)
+                .and()
+                .body("success", is(true))
+                .and()
+                .body("order", is(notNullValue()));
     }
 
     @Test
@@ -88,6 +97,10 @@ public class CreateOrderAuthorizedTest {
         ingredientsRequest = new IngredientsRequest(new ArrayList<>());
         orderClient.createOrderAuthorized(ingredientsRequest, token)
                 .assertThat()
-                .statusCode(SC_BAD_REQUEST);
-        }
+                .statusCode(SC_BAD_REQUEST)
+                .and()
+                .body("success", is(false))
+                .and()
+                .body("message", is("Ingredient ids must be provided"));
+    }
 }
