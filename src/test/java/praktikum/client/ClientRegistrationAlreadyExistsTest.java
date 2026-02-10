@@ -25,7 +25,7 @@ public class ClientRegistrationAlreadyExistsTest {
         clientGenerator = ClientGenerator.getRandom();
 
         ValidatableResponse responseUser = client.createClient(clientGenerator);
-        secondUserToken = responseUser.extract().path("accessToken");
+        firstUserToken = responseUser.extract().path("accessToken");
 
         responseUser.assertThat()
                 .statusCode(SC_OK);
